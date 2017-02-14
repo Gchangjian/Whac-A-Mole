@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>game</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+<style type="text/css">
+    table tr{
+        display: table-row;
+    }
+    table td {
+        width: 95px;
+        height: 95px;
+        border: 1px solid red;
+        text-align: center;
+    }
+</style>
+<script type="text/javascript">
+window.onload = function(){
+    var span = document.querySelector('span');
+    var b = document.querySelector('b');    
+}
+    var start = false;
+    var startInter = null;
+    var tt = null;
+    var hide = null;
+    var itemArr = [false,false,false,false,false,false,false,false,false];
+    var score = 0;
+    var scoreText = ['小伙，手速欠练啊', '平时没少撸吧', '小心强撸灰飞烟灭', '你已经撸超神了'];
+    function time(){
+        var time = 30;
+            tt = setInterval(function(){
+            if(time==0){
+                clearInterval(tt);
+                endGanme();
+            }else{
+                time--;
+            }
+            b.innerHTML = time;
+        }, 1000);
+    }
+    function getScore(){
+        score++;
+        span.innerHTML = score;
+    }
+    function loseScore(){
+        if(score>0){
+            score--;
+        }
+        span.innerHTML = score;
+    }
+    function startGame(){
+        start = true;
+        b.innerHTML = 30;
+        span.innerHTML = 0;
+        showMouse();
+        time();
+    }
+    function endGanme(){
+        clearInterval(startInter);
+        clearInterval(tt);
+        var td = document.querySelectorAll('td');
+        for(var j=0;j<td.length;j++){
+            td[j].style.background = '';
+        }
+        var i = Math.floor(span.innerHTML / 10);
+        if(i>3){
+            i=3;
+        }
+        alert('您的得分： '+span.innerHTML +', '+ scoreText[i]);
+        score = 0;
+    }
+    function showMouse(){
+        startInter = setInterval(function(){
+            var item = Math.floor(Math.random()*12);
+            if(!itemArr[item]){
+                var showItem = document.querySelector("#item"+item);
+                showItem.style.background = 'url(mouse.png) no-repeat';
+                itemArr[item] = true;
+                hideSelf(item);
+            }
+        }, 300)
+
+    }
+    function hideSelf(item){
+        hide = setTimeout(function(){
+            if(itemArr[item]){
+                var hide = document.querySelector("#item"+item);
+                hide.style.background = '';
+                itemArr[item] = false;
+            }
+        }, 2000)     
+    }
+    function hideMouse(id){
+        if(!start){
+            alert('请点击开始游戏');
+            return;
+        }
+        var hideItem = document.querySelector("#item"+id);
+        if(!hideItem.style.background){
+            loseScore();
+        }else{
+            getScore();
+        }
+        itemArr[id] = false;
+        hideItem.style.background = '';
+    }
+    
+</script>
+</head>
+<body>
+    <input type="button" value="开始游戏" onclick="startGame()" />
+    <input type="button" value="结束游戏" onclick="endGanme()">
+    <label>得分</label>
+    <span id="span">0</span>
+    <label>倒计时</label>
+    <b id="b">30</b>
+    <table>
+        <tr>
+            <td id="item0" onclick="hideMouse(0)">0</td>
+            <td id="item1" onclick="hideMouse(1)">1</td>
+            <td id="item2" onclick="hideMouse(2)">2</td>
+            <td id="item3" onclick="hideMouse(3)">3</td>
+        </tr>
+        <tr>
+            <td id="item4" onclick="hideMouse(4)">1</td>
+            <td id="item5" onclick="hideMouse(5)">2</td>
+            <td id="item6" onclick="hideMouse(6)">3</td>
+            <td id="item7" onclick="hideMouse(7)">1</td>
+        </tr>
+        <tr>
+            <td id="item8" onclick="hideMouse(8)">2</td>
+            <td id="item9" onclick="hideMouse(9)">3</td>
+            <td id="item10" onclick="hideMouse(10)">2</td>
+            <td id="item11" onclick="hideMouse(11)">3</td>
+        </tr>
+    </table>
+</body>
+</html>
